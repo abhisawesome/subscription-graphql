@@ -19,3 +19,20 @@ npm run start
 [http://localhost:4000/graphql](http://localhost:4000/graphql) 
 
 ![Screenshot](/docs/screenshot.png?raw=true)
+
+
+## Client
+
+```bash
+cd ./client
+```
+
+### To install
+```bash
+npm run i
+```
+
+### To run
+```bash
+npm run dev
+```
