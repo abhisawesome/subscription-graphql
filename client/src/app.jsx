@@ -1,32 +1,48 @@
-import { useState } from 'preact/hooks'
-import preactLogo from './assets/preact.svg'
-import './app.css'
+import { useEffect, useState } from "preact/hooks";
+import { useSubscription, gql, useQuery } from "@apollo/client";
+import "./app.css";
+
+const subscription = gql(
+  `subscription {
+    numberIncremented
+  }`
+);
+const query = gql(`
+  query {
+    currentNumber
+  }`);
 
 export function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  // subscription
+  const { loading, error, data } = useSubscription(subscription);
+  // query
+  const {
+    loading: queryLoading,
+    error: queryError,
+    data: queryData,
+  } = useQuery(query);
 
+  useEffect(() => {
+    if (data && data.numberIncremented) {
+      setCount(data.numberIncremented);
+    }
+  }, [data]);
+  useEffect(() => {
+    if (queryData && queryData.currentNumber) {
+      setCount(queryData.currentNumber);
+    }
+  }, [queryData]);
+  if (queryLoading) {
+    return (
+      <>
+        <div>Loading...</div>
+      </>
+    );
+  }
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://preactjs.com" target="_blank">
-          <img src={preactLogo} class="logo preact" alt="Preact logo" />
-        </a>
-      </div>
-      <h1>Vite + Preact</h1>
-      <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/app.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p class="read-the-docs">
-        Click on the Vite and Preact logos to learn more
-      </p>
+      <div class="card">current number is {count}</div>
     </>
-  )
+  );
 }

@@ -7,7 +7,7 @@ import { createServer } from "node:http";
 import { useServer } from "graphql-ws/lib/use/ws";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-
+import cors from "cors";
 let PORT = 4000;
 
 
@@ -90,6 +90,7 @@ type Subscription {
   });
   await server.start();
 
+  app.use(cors());
   app.use(
     "/graphql",
     express.json(),
